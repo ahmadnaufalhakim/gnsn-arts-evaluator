@@ -14,7 +14,10 @@ class Weapon(object) :
     self._type = cnt.weapons[self._key]["type"]
     self._substat = cnt.weapons[self._key]["substat"]
     Weapon.count += 1
-    self._id = f"weapon_{Weapon.count}"
+    # # this id is for self development
+    # self._id = f"weapon_{Weapon.count}"
+    # this id is for GOOD format
+    self._id = weapObj["id"]
 
   def __eq__(self, other) -> bool:
     self._id == other.id
