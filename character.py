@@ -1,11 +1,21 @@
+from collections import Counter
 import re
-from typing import Union
-from weapon import Weapon, default_weapon_obj
-from artifact import Artifact
+from weapon import (
+  Weapon,
+  default_weapon
+)
+from artifact import (
+  Artifact,
+  zero_stat_values,
+  set_key_to_set_bonus
+)
 from constants import character as cnt
 
+characters = {}
+
 class Character(object) :
-  def __init__(self, charObj) -> None:
+  count = 0
+  def __init__(self, charObj) -> None :
     self._key = charObj["key"]
     self._name = ' '.join(re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', self._key)).split())
     self._level = charObj["level"]
@@ -18,14 +28,21 @@ class Character(object) :
     self._element = cnt.characters[self._key]["element"]
     self._special_stat = cnt.characters[self._key]["special_stat"]
     self._weapon_type = cnt.characters[self._key]["weapon_type"]
-    self._weapon = Weapon(default_weapon_obj(self._key, self._weapon_type))
-    self._artifacts = {
+    self._weapon = default_weapon(self._key, self._weapon_type)
+    self._arts = {
       "flower": None,
       "plume": None,
       "sands": None,
       "goblet": None,
       "circlet": None
     }
+    self._art_set_bonuses = {}
+    Character.count += 1
+    self._id = charObj["id"]
+    characters[self._id] = self
+
+  def __eq__(self, other) -> bool :
+    return self._id == other.id
 
   @property
   def key(self) :
@@ -126,28 +143,60 @@ class Character(object) :
     self._weapon = weapon
 
   @property
-  def artifacts(self) :
-    return self._artifacts
-  @artifacts.setter
-  def artifacts(self, val) :
+  def arts(self) :
+    return self._arts
+  @arts.setter
+  def arts(self, val) :
     try :
-      slot_key, artifact: Union[Artifact, None] = val
+      slot_key, art = val
+      assert isinstance(art, (Artifact, type(None)))
     except Exception as e :
       raise e
-    if artifact is not None :
-      if slot_key != artifact.slot_key :
-        raise Exception(f"Artifact slot key doesn't match: {slot_key} != {artifact.slot_key}")
-      if self._artifacts[slot_key] is not None :
-        if self._artifacts[slot_key].location != artifact.location :
-          self._artifacts[slot_key].location, artifact.location = artifact.location, self._artifacts[slot_key].location
+    # Swapping the artifact location
+    if art is not None :
+      if slot_key != art.slot_key :
+        raise Exception(f"Artifact slot key doesn't match: {slot_key} != {art.slot_key}")
+      if self._arts[slot_key] is not None :
+        if self._arts[slot_key].location != art.location :
+          self._arts[slot_key].location, art.location = art.location, self._arts[slot_key].location
         else :
-          self._artifacts[slot_key].location, artifact.location = '', self._key
+          self._arts[slot_key].location, art.location = '', self._key
       else :
-        artifact.location = self._key
+        art.location = self._key
     else :
-      if self._artifacts[slot_key] is not None :
-        self._artifacts[slot_key].location = ''
-    self._artifacts[slot_key] = artifact
+      if self._arts[slot_key] is not None :
+        self._arts[slot_key].location = ''
+    # Equipping the artifact
+    self._arts[slot_key] = art
+    # Getting artifact sets bonuses
+    self._art_set_bonuses = {}
+    arts = [art for art in self._arts.values() if art is not None]
+    art_sets = Counter((art.set_key) for art in arts).items()
+    for art_set, n_pc in art_sets :
+      self._art_set_bonuses[art_set] = {}
+      for n_pc_bonus in set_key_to_set_bonus[art_set] :
+        if n_pc >= n_pc_bonus :
+          self._art_set_bonuses[art_set][n_pc_bonus] = set_key_to_set_bonus[art_set][n_pc_bonus]
+
+  @property
+  def art_set_bonuses(self) :
+    return self._art_set_bonuses
+
+  @property
+  def id(self) :
+    return self._id
+
+  @property
+  def art_stat_values(self) :
+    if all(art is None for art in self._arts.values()) :
+      return zero_stat_values
+    art_stat_values = sum(art for art in self._arts.values() if art is not None)
+    for art_set in self._art_set_bonuses :
+      for n_pc in self._art_set_bonuses[art_set] :
+        if len(list(self._art_set_bonuses[art_set][n_pc]["set_bonus"])) > 0 :
+          bonus_stat = list(self._art_set_bonuses[art_set][n_pc]["set_bonus"])[0]
+          art_stat_values[bonus_stat] += self._art_set_bonuses[art_set][n_pc]["set_bonus"][bonus_stat]
+    return art_stat_values
 
   @property
   def hp(self) :
@@ -157,16 +206,11 @@ class Character(object) :
       + (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
         if self._special_stat == "hp" else 0)
     weap_hp = (self._weapon.substat_value if self._weapon.substat == "hp" else 0)
-    art_hp, art_hp_flat = 0, 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "hp%" in artifact.stat_values :
-          art_hp += artifact.stat_values["hp%"]
-        if "hp" in artifact.stat_values :
-          art_hp_flat += artifact.stat_values["hp"]
+    art_stat_values = self.art_stat_values
+    art_hp = art_stat_values["hp%"]
+    art_hp_flat = art_stat_values["hp"]
     # print(f"HP: {char_hp}*(1 + {weap_hp} + {art_hp}) + {art_hp_flat}")
     hp = char_hp*(1 + weap_hp + art_hp) + art_hp_flat
-    #TODO: add from art set bonus
     return hp
 
   @property
@@ -178,16 +222,11 @@ class Character(object) :
         if self._special_stat == "atk" else 0) \
       + self._weapon.base_atk
     weap_atk = (self._weapon.substat_value if self._weapon.substat == "atk" else 0)
-    art_atk, art_atk_flat = 0, 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "atk%" in artifact.stat_values :
-          art_atk += artifact.stat_values["atk%"]
-        if "atk" in artifact.stat_values :
-          art_atk_flat += artifact.stat_values["atk"]
+    art_stat_values = self.art_stat_values
+    art_atk = art_stat_values["atk%"]
+    art_atk_flat = art_stat_values["atk"]
     # print(f"ATK: {base_atk}*(1 + {weap_atk} + {art_atk}) + {art_atk_flat}")
     atk = base_atk*(1 + weap_atk + art_atk) + art_atk_flat
-    #TODO: add from art set bonus
     return atk
 
   @property
@@ -198,16 +237,11 @@ class Character(object) :
       + (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
         if self._special_stat == "def" else 0)
     weap_def = (self._weapon.substat_value if self._weapon.substat == "def" else 0)
-    art_def, art_def_flat = 0, 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "def%" in artifact.stat_values :
-          art_def += artifact.stat_values["def%"]
-        if "def" in artifact.stat_values :
-          art_def_flat += artifact.stat_values["def"]
+    art_stat_values = self.art_stat_values
+    art_def = art_stat_values["def%"]
+    art_def_flat = art_stat_values["def"]
     # print(f"DEF: {char_def}*(1 + {weap_def} + {art_def}) + {art_def_flat}")
     defense = char_def*(1 + weap_def + art_def) + art_def_flat
-    #TODO: add from art set bonus
     return defense
 
   @property
@@ -216,14 +250,10 @@ class Character(object) :
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "em" else 0)
     weap_em = (self._weapon.substat_value if self._weapon.substat == "em" else 0)
-    art_em = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "em" in artifact.stat_values :
-          art_em += artifact.stat_values["em"]
+    art_stat_values = self.art_stat_values
+    art_em = art_stat_values["em"]
     # print(f"EM: {char_em} + {weap_em} + {art_em}")
     em = char_em + weap_em + art_em
-    #TODO: add from art set bonus
     return em
 
   @property
@@ -233,14 +263,10 @@ class Character(object) :
       if self._special_stat == "crit_rate" else 0) \
       + (-1 if self._key == "SangonomiyaKokomi" else 0)
     weap_crit_rate = (self._weapon.substat_value if self._weapon.substat == "crit_rate" else 0)
-    art_crit_rate = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "crit_rate" in artifact.stat_values :
-          art_crit_rate += artifact.stat_values["crit_rate"]
+    art_stat_values = self.art_stat_values
+    art_crit_rate = art_stat_values["crit_rate"]
     # print(f"CRIT Rate: {char_crit_rate} + .05 + {weap_crit_rate} + {art_crit_rate}")
     crit_rate = char_crit_rate + .05 + weap_crit_rate + art_crit_rate
-    #TODO: add from art set bonus
     return 0 if crit_rate <= 0 else crit_rate if 0 < crit_rate < 1 else 1
 
   @property
@@ -249,14 +275,10 @@ class Character(object) :
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "crit_dmg" else 0)
     weap_crit_dmg = (self._weapon.substat_value if self._weapon.substat == "crit_dmg" else 0)
-    art_crit_dmg = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "crit_dmg" in artifact.stat_values :
-          art_crit_dmg += artifact.stat_values["crit_dmg"]
+    art_stat_values = self.art_stat_values
+    art_crit_dmg = art_stat_values["crit_dmg"]
     # print(f"CRIT DMG: {char_crit_dmg} + .5 + {weap_crit_dmg} + {art_crit_dmg}")
     crit_dmg = char_crit_dmg + .5 + weap_crit_dmg + art_crit_dmg
-    #TODO: add from art set bonus
     return crit_dmg
 
   @property
@@ -264,14 +286,10 @@ class Character(object) :
     char_healing_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "healing_bonus" else 0)
-    art_healing_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "healing_bonus" in artifact.stat_values :
-          art_healing_bonus += artifact.stat_values["healing_bonus"]
+    art_stat_values = self.art_stat_values
+    art_healing_bonus = art_stat_values["healing_bonus"]
     # print(f"Healing Bonus: {char_healing_bonus} + {art_healing_bonus}")
     healing_bonus = char_healing_bonus + art_healing_bonus
-    #TODO: add from art set bonus
     return healing_bonus
 
   @property
@@ -280,14 +298,10 @@ class Character(object) :
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "er" else 0)
     weap_er = (self._weapon.substat_value if self._weapon.substat == "er" else 0)
-    art_er = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "er" in artifact.stat_values :
-          art_er += artifact.stat_values["er"]
+    art_stat_values = self.art_stat_values
+    art_er = art_stat_values["er"]
     # print(f"ER: {char_er} + 1 + {weap_er} + {art_er}")
     er = char_er + 1 + weap_er + art_er
-    #TODO: add from art set bonus
     return er
 
   @property
@@ -295,14 +309,10 @@ class Character(object) :
     char_pyro_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "pyro" else 0)
-    art_pyro_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "pyro_dmg_bonus" in artifact.stat_values :
-          art_pyro_dmg_bonus += artifact.stat_values["pyro_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_pyro_dmg_bonus = art_stat_values["pyro_dmg_bonus"]
     # print(f"Pyro DMG Bonus: {char_pyro_dmg_bonus} + {art_pyro_dmg_bonus}")
     pyro_dmg_bonus = char_pyro_dmg_bonus + art_pyro_dmg_bonus
-    #TODO: add from art set bonus
     return pyro_dmg_bonus
 
   @property
@@ -310,14 +320,10 @@ class Character(object) :
     char_hydro_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "hydro" else 0)
-    art_hydro_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "hydro_dmg_bonus" in artifact.stat_values :
-          art_hydro_dmg_bonus += artifact.stat_values["hydro_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_hydro_dmg_bonus = art_stat_values["hydro_dmg_bonus"]
     # print(f"Hydro DMG Bonus: {char_hydro_dmg_bonus} + {art_hydro_dmg_bonus}")
     hydro_dmg_bonus = char_hydro_dmg_bonus + art_hydro_dmg_bonus
-    #TODO: add from art set bonus
     return hydro_dmg_bonus
 
   @property
@@ -325,14 +331,10 @@ class Character(object) :
     char_dendro_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "dendro" else 0)
-    art_dendro_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "dendro_dmg_bonus" in artifact.stat_values :
-          art_dendro_dmg_bonus += artifact.stat_values["dendro_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_dendro_dmg_bonus = art_stat_values["dendro_dmg_bonus"]
     # print(f"Dendro DMG Bonus: {char_dendro_dmg_bonus} + {art_dendro_dmg_bonus}")
     dendro_dmg_bonus = char_dendro_dmg_bonus + art_dendro_dmg_bonus
-    #TODO: add from art set bonus
     return dendro_dmg_bonus
 
   @property
@@ -340,14 +342,10 @@ class Character(object) :
     char_electro_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "electro" else 0)
-    art_electro_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "electro_dmg_bonus" in artifact.stat_values :
-          art_electro_dmg_bonus += artifact.stat_values["electro_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_electro_dmg_bonus = art_stat_values["electro_dmg_bonus"]
     # print(f"Electro DMG Bonus: {char_electro_dmg_bonus} + {art_electro_dmg_bonus}")
     electro_dmg_bonus = char_electro_dmg_bonus + art_electro_dmg_bonus
-    #TODO: add from art set bonus
     return electro_dmg_bonus
 
   @property
@@ -355,14 +353,10 @@ class Character(object) :
     char_anemo_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "anemo" else 0)
-    art_anemo_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "anemo_dmg_bonus" in artifact.stat_values :
-          art_anemo_dmg_bonus += artifact.stat_values["anemo_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_anemo_dmg_bonus = art_stat_values["anemo_dmg_bonus"]
     # print(f"Anemo DMG Bonus: {char_anemo_dmg_bonus} + {art_anemo_dmg_bonus}")
     anemo_dmg_bonus = char_anemo_dmg_bonus + art_anemo_dmg_bonus
-    #TODO: add from art set bonus
     return anemo_dmg_bonus
 
   @property
@@ -370,14 +364,10 @@ class Character(object) :
     char_cryo_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "cryo" else 0)
-    art_cryo_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "cryo_dmg_bonus" in artifact.stat_values :
-          art_cryo_dmg_bonus += artifact.stat_values["cryo_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_cryo_dmg_bonus = art_stat_values["cryo_dmg_bonus"]
     # print(f"Cryo DMG Bonus: {char_cryo_dmg_bonus} + {art_cryo_dmg_bonus}")
     cryo_dmg_bonus = char_cryo_dmg_bonus + art_cryo_dmg_bonus
-    #TODO: add from art set bonus
     return cryo_dmg_bonus
 
   @property
@@ -385,14 +375,10 @@ class Character(object) :
     char_geo_dmg_bonus = \
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "elemental_dmg_bonus" and self._element == "geo" else 0)
-    art_geo_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "geo_dmg_bonus" in artifact.stat_values :
-          art_geo_dmg_bonus += artifact.stat_values["geo_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_geo_dmg_bonus = art_stat_values["geo_dmg_bonus"]
     # print(f"Geo DMG Bonus: {char_geo_dmg_bonus} + {art_geo_dmg_bonus}")
     geo_dmg_bonus = char_geo_dmg_bonus + art_geo_dmg_bonus
-    #TODO: add from art set bonus
     return geo_dmg_bonus
 
   @property
@@ -418,12 +404,8 @@ class Character(object) :
       (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
       if self._special_stat == "physical_dmg_bonus" else 0)
     weap_physical_dmg_bonus = (self._weapon.substat_value if self._weapon.substat == "physical_dmg_bonus" else 0)
-    art_physical_dmg_bonus = 0
-    for artifact in self._artifacts.values() :
-      if artifact is not None :
-        if "physical_dmg_bonus" in artifact.stat_values :
-          art_physical_dmg_bonus += artifact.stat_values["physical_dmg_bonus"]
+    art_stat_values = self.art_stat_values
+    art_physical_dmg_bonus = art_stat_values["physical_dmg_bonus"]
     # print(f"Physical DMG Bonus: {char_physical_dmg_bonus} + {weap_physical_dmg_bonus} + {art_physical_dmg_bonus}")
     physical_dmg_bonus = char_physical_dmg_bonus + weap_physical_dmg_bonus + art_physical_dmg_bonus
-    #TODO: add from art set bonus
     return physical_dmg_bonus
