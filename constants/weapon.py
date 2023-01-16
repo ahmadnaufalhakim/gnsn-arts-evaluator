@@ -2478,3 +2478,48 @@ key_to_name = {
   "WolfsGravestone": "Wolf's Gravestone",
   "XiphosMoonlight": "Xiphos' Moonlight"
 }
+
+# weapon_type_to_default_weapon_obj(Character.key)[Character.weapon_type]
+def weapon_type_to_default_weapon_obj(character_key) :
+  return {
+    "bow": {
+      "key": "HuntersBow",
+      "level": 1,
+      "ascension": 0,
+      "refinement": 1,
+      "location": character_key,
+      "id": "default_bow"
+    },
+    "catalyst": {
+      "key": "ApprenticesNotes",
+      "level": 1,
+      "ascension": 0,
+      "refinement": 1,
+      "location": character_key,
+      "id": "default_catalyst"
+    },
+    "claymore": {
+      "key": "WasterGreatsword",
+      "level": 1,
+      "ascension": 0,
+      "refinement": 1,
+      "location": character_key,
+      "id": "default_claymore"
+    },
+    "polearm": {
+      "key": "BeginnersProtector",
+      "level": 1,
+      "ascension": 0,
+      "refinement": 1,
+      "location": character_key,
+      "id": "default_polearm"
+    },
+    "sword": {
+      "key": "DullBlade",
+      "level": 1,
+      "ascension": 0,
+      "refinement": 1,
+      "location": character_key,
+      "id": "default_sword"
+    }
+  }

@@ -1,8 +1,10 @@
 from constants import weapon as cnt
 
+weapons = {}
+
 class Weapon(object) :
   count = 0
-  def __init__(self, weapObj) -> None:
+  def __init__(self, weapObj) -> None :
     self._key = weapObj["key"]
     self._name = cnt.key_to_name[self._key]
     self._level = weapObj["level"]
@@ -18,8 +20,9 @@ class Weapon(object) :
     # self._id = f"weapon_{Weapon.count}"
     # this id is for GOOD format
     self._id = weapObj["id"]
+    weapons[self._id] = self
 
-  def __eq__(self, other) -> bool:
+  def __eq__(self, other) -> bool :
     self._id == other.id
 
   @property
@@ -112,42 +115,5 @@ class Weapon(object) :
   def substat(self, substat) :
     self._substat = substat
 
-def default_weapon_obj(character_key, weapon_type) : 
-  weapon_type_to_default_weapon = {
-    "bow": {
-      "key": "HuntersBow",
-      "level": 1,
-      "ascension": 0,
-      "refinement": 1,
-      "location": character_key
-    },
-    "catalyst": {
-      "key": "ApprenticesNotes",
-      "level": 1,
-      "ascension": 0,
-      "refinement": 1,
-      "location": character_key
-    },
-    "claymore": {
-      "key": "WasterGreatsword",
-      "level": 1,
-      "ascension": 0,
-      "refinement": 1,
-      "location": character_key
-    },
-    "polearm": {
-      "key": "BeginnersProtector",
-      "level": 1,
-      "ascension": 0,
-      "refinement": 1,
-      "location": character_key
-    },
-    "sword": {
-      "key": "DullBlade",
-      "level": 1,
-      "ascension": 0,
-      "refinement": 1,
-      "location": character_key
-    }
-  }
-  return weapon_type_to_default_weapon[weapon_type]
+def default_weapon(character_key, weapon_type) : 
+  return Weapon(cnt.weapon_type_to_default_weapon_obj(character_key)[weapon_type])
