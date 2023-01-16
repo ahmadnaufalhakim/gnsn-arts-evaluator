@@ -11,8 +11,6 @@ from artifact import (
 )
 from constants import character as cnt
 
-characters = {}
-
 class Character(object) :
   count = 0
   def __init__(self, charObj) -> None :
@@ -39,7 +37,6 @@ class Character(object) :
     self._art_set_bonuses = {}
     Character.count += 1
     self._id = charObj["id"]
-    characters[self._id] = self
 
   def __eq__(self, other) -> bool :
     return self._id == other.id

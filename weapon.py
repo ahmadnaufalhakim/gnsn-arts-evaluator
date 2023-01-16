@@ -1,7 +1,5 @@
 from constants import weapon as cnt
 
-weapons = {}
-
 class Weapon(object) :
   count = 0
   def __init__(self, weapObj) -> None :
@@ -20,7 +18,6 @@ class Weapon(object) :
     # self._id = f"weapon_{Weapon.count}"
     # this id is for GOOD format
     self._id = weapObj["id"]
-    weapons[self._id] = self
 
   def __eq__(self, other) -> bool :
     self._id == other.id

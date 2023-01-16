@@ -1,7 +1,5 @@
 from constants import artifact as cnt
 
-artifacts = {}
-
 class Artifact(object) :
   count = 0
   def __init__(self, artObj) -> None :
@@ -24,7 +22,6 @@ class Artifact(object) :
     # self._id = f"artifact_{Artifact.count}"
     # this id is for GOOD format
     self._id = artObj["id"]
-    artifacts[self._id] = self
 
   def __eq__(self, other) -> bool :
     return self._id == other.id
