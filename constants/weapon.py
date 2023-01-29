@@ -1,3 +1,4 @@
+# NB: Type "t-44" is for 4-star, "t-44b" is for 5-star
 # weapons[Weapon.key]["weapon_type"|"star"|"type"|"substat"]
 weapons = {
   "AThousandFloatingDreams": {
@@ -371,6 +372,12 @@ weapons = {
     "star": 4,
     "type": "t-44",
     "substat": "em",
+  },
+  "LightOfFoliarIncision": {
+    "weapon_type": "sword",
+    "star": 5,
+    "type": "t-44b",
+    "substat": "crit_dmg",
   },
   "LionsRoar": {
     "weapon_type": "sword",
@@ -2389,6 +2396,7 @@ key_to_name = {
   "KeyOfKhajNisut": "Key of Khaj-Nisut",
   "KingsSquire": "King's Squire",
   "KitainCrossSpear": "Kitain Cross Spear",
+  "LightOfFoliarIncision": "Light of Foliar Incision",
   "LionsRoar": "Lion's Roar",
   "LithicBlade": "Lithic Blade",
   "LithicSpear": "Lithic Spear",
