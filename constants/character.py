@@ -9,6 +9,15 @@ characters = {
     "special_stat": "elemental_dmg_bonus",
     "weapon_type": "sword",
   },
+  "Alhaitham": {
+    "base_hp": 1039.1188,
+    "base_atk": 24.3922,
+    "base_def": 60.84711,
+    "star": 5,
+    "element": "dendro",
+    "special_stat": "elemental_dmg_bonus",
+    "weapon_type": "sword",
+  },
   "Aloy": {
     "base_hp": 848.4548,
     "base_atk": 18.21036,
@@ -513,6 +522,15 @@ characters = {
     "special_stat": "elemental_dmg_bonus",
     "weapon_type": "catalyst",
   },
+  "Yaoyao": {
+    "base_hp": 1030.3239,
+    "base_atk": 17.808,
+    "base_def": 62.9475,
+    "star": 4,
+    "element": "dendro",
+    "special_stat": "hp",
+    "weapon_type": "polearm",
+  },
   "Yelan": {
     "base_hp": 1124.9176,
     "base_atk": 18.9924,
@@ -756,6 +774,11 @@ max_ascension_values = {
     "hp": 4228.035,
     "atk": 80.28111,
     "def": 280.098
+  },
+  "Alhaitham": {
+    "hp": 4267.1836,
+    "atk": 100.16024,
+    "def": 249.8769
   },
   "Aloy": {
     "hp": 3484.214,
@@ -1036,6 +1059,11 @@ max_ascension_values = {
     "hp": 2805.64,
     "atk": 72.001564,
     "def": 176.085
+  },
+  "Yaoyao": {
+    "hp": 3686.4802,
+    "atk": 63.7182,
+    "def": 225.225
   },
   "Yelan": {
     "hp": 4619.52,
