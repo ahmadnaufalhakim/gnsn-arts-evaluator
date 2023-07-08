@@ -49,6 +49,12 @@ weapons = {
     "type": "t-48",
     "substat": "physical_dmg_bonus",
   },
+  "BeaconOfTheReedSea": {
+    "weapon_type": "claymore",
+    "star": 5,
+    "type": "t-46",
+    "substat": "crit_rate",
+  },
   "BeginnersProtector": {
     "weapon_type": "polearm",
     "star": 1,
@@ -2342,6 +2348,7 @@ key_to_name = {
   "ApprenticesNotes": "Apprentice's Notes",
   "AquaSimulacra": "Aqua Simulacra",
   "AquilaFavonia": "Aquila Favonia",
+  "BeaconOfTheReedSea": "Beacon of the Reed Sea",
   "BeginnersProtector": "Beginner's Protector",
   "BlackTassel": "Black Tassel",
   "BlackcliffAgate": "Blackcliff Agate",
