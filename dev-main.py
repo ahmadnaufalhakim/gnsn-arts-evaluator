@@ -5,10 +5,10 @@ import glob
 import pprint
 import sys
 import time
-from artifact import Artifact
-from character import Character
-from weapon import Weapon
-from evaluator import (
+from src.artifact import Artifact
+from src.character import Character
+from src.weapon import Weapon
+from src.utils.evaluator import (
   equip_art_combination,
   evaluate_arts
 )
