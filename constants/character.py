@@ -324,6 +324,15 @@ characters = {
     "special_stat": "em",
     "weapon_type": "catalyst",
   },
+  "Mika": {
+    "base_hp": 1048.5597,
+    "base_atk": 18.6984,
+    "base_def": 59.800125,
+    "star": 4,
+    "element": "cryo",
+    "special_stat": "hp",
+    "weapon_type": "polearm",
+  },
   "Mona": {
     "base_hp": 810.322,
     "base_atk": 22.344,
@@ -985,6 +994,11 @@ max_ascension_values = {
     "hp": 2870.8872,
     "atk": 69.452835,
     "def": 171.99
+  },
+  "Mika": {
+    "hp": 3751.7275,
+    "atk": 66.90411,
+    "def": 213.96375
   },
   "Mona": {
     "hp": 3327.62,
