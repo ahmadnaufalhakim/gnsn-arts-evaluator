@@ -45,6 +45,15 @@ characters = {
     "special_stat": "crit_rate",
     "weapon_type": "claymore",
   },
+  "Baizhu": {
+    "base_hp": 1039.1188,
+    "base_atk": 14.9891,
+    "base_def": 38.8895,
+    "star": 5,
+    "element": "dendro",
+    "special_stat": "hp",
+    "weapon_type": "catalyst",
+  },
   "Barbara": {
     "base_hp": 820.6119,
     "base_atk": 13.356,
@@ -794,6 +803,11 @@ max_ascension_values = {
     "hp": 4110.59,
     "atk": 72.63529,
     "def": 306.6336
+  },
+  "Baizhu": {
+    "hp": 4267.1836,
+    "atk": 61.54885,
+    "def": 159.705
   },
   "Barbara": {
     "hp": 2936.1348,
