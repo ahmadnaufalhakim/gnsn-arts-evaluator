@@ -433,6 +433,12 @@ weapons = {
     "type": "t-38",
     "substat": "em",
   },
+  "MailedFlower": {
+    "weapon_type": "claymore",
+    "star": 4,
+    "type": "t-44",
+    "substat": "em",
+  },
   "MakhairaAquamarine": {
     "weapon_type": "claymore",
     "star": 4,
@@ -2424,6 +2430,7 @@ key_to_name = {
   "LostPrayerToTheSacredWinds": "Lost Prayer to the Sacred Winds",
   "LuxuriousSeaLord": "Luxurious Sea-Lord",
   "MagicGuide": "Magic Guide",
+  "MailedFlower": "Mailed Flower",
   "MakhairaAquamarine": "Makhaira Aquamarine",
   "MappaMare": "Mappa Mare",
   "MemoryOfDust": "Memory of Dust",
