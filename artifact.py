@@ -18,10 +18,10 @@ class Artifact(object) :
       })
     self._location = artObj["location"]
     Artifact.count += 1
-    # # this id is for self development
-    # self._id = f"artifact_{Artifact.count}"
     # this id is for GOOD format
     self._id = artObj["id"]
+    # # this id is for self development
+    # self._id = f"artifact_{Artifact.count}"
 
   def __eq__(self, other) -> bool :
     return self._id == other.id
@@ -37,11 +37,11 @@ class Artifact(object) :
     elif type(other) == dict :
       return self.__add__(other)
 
-  def __str__(self) -> str:
-    return self._id
+  def __str__(self) -> str :
+    return f"{self._id}-{self._slot_key}-{self._set_key}-{self._star}star-Lv{self._level}-{self._main_stat}-{self._substats}"
 
-  def __repr__(self) -> str:
-    return self._id
+  def __repr__(self) -> str :
+    return str(self)
 
   @property
   def set_key(self) :
