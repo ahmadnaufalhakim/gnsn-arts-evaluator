@@ -117,6 +117,15 @@ characters = {
     "special_stat": "crit_dmg",
     "weapon_type": "polearm",
   },
+  "Dehya": {
+    "base_hp": 1220.2496,
+    "base_atk": 20.6682,
+    "base_def": 48.88111,
+    "star": 5,
+    "element": "pyro",
+    "special_stat": "hp",
+    "weapon_type": "claymore",
+  },
   "Diluc": {
     "base_hp": 1010.5192,
     "base_atk": 26.068,
@@ -843,6 +852,11 @@ max_ascension_values = {
     "hp": 3993.1443,
     "atk": 101.68941,
     "def": 274.6926
+  },
+  "Dehya": {
+    "hp": 5011.0044,
+    "atk": 84.8686,
+    "def": 200.7369
   },
   "Diluc": {
     "hp": 4149.7383,
