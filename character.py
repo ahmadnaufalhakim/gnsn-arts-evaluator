@@ -19,13 +19,13 @@ class Character(object) :
     self._level = charObj["level"]
     self._ascension = charObj["ascension"]
     self._constellation = charObj["constellation"]
-    self._base_hp = cnt.characters[self._key]["base_hp"]
-    self._base_atk = cnt.characters[self._key]["base_atk"]
-    self._base_def = cnt.characters[self._key]["base_def"]
-    self._star = cnt.characters[self._key]["star"]
-    self._element = cnt.characters[self._key]["element"]
-    self._special_stat = cnt.characters[self._key]["special_stat"]
-    self._weapon_type = cnt.characters[self._key]["weapon_type"]
+    self._base_hp = cnt.characters[self._key]["base_hp"] if not self.is_traveler() else cnt.characters["Traveler"]["base_hp"]
+    self._base_atk = cnt.characters[self._key]["base_atk"] if not self.is_traveler() else cnt.characters["Traveler"]["base_atk"]
+    self._base_def = cnt.characters[self._key]["base_def"] if not self.is_traveler() else cnt.characters["Traveler"]["base_def"]
+    self._star = cnt.characters[self._key]["star"] if not self.is_traveler() else cnt.characters["Traveler"]["star"]
+    self._element = cnt.characters[self._key]["element"] if not self.is_traveler() else cnt.characters["Traveler"]["element"]
+    self._special_stat = cnt.characters[self._key]["special_stat"] if not self.is_traveler() else cnt.characters["Traveler"]["special_stat"]
+    self._weapon_type = cnt.characters[self._key]["weapon_type"] if not self.is_traveler() else cnt.characters["Traveler"]["weapon_type"]
     self._weapon = default_weapon(self._key, self._weapon_type)
     self._arts = {
       "flower": None,
@@ -40,6 +40,12 @@ class Character(object) :
 
   def __eq__(self, other) -> bool :
     return self._id == other.id
+
+  def __str__(self) -> str :
+    return f"{self._name}\nHP:\t{self.hp}\nATK:\t{self.atk}\nDEF:\t{self.defense}"
+
+  def is_traveler(self) -> bool :
+    return "Traveler" in self._key
 
   @property
   def key(self) :
@@ -199,7 +205,7 @@ class Character(object) :
   def hp(self) :
     char_hp = \
       self._base_hp*cnt.level_multipliers[self._star][self._level-1] \
-      + cnt.ascension_phase_to_total_section[self._ascension]*cnt.max_ascension_values[self._key]["hp"] \
+      + cnt.ascension_phase_to_total_section[self._ascension]*(cnt.max_ascension_values[self._key]["hp"] if not self.is_traveler() else cnt.max_ascension_values["Traveler"]["hp"]) \
       + (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
         if self._special_stat == "hp" else 0)
     weap_hp = (self._weapon.substat_value if self._weapon.substat == "hp" else 0)
@@ -214,7 +220,7 @@ class Character(object) :
   def atk(self) :
     base_atk = \
       self._base_atk*cnt.level_multipliers[self._star][self._level-1] \
-      + cnt.ascension_phase_to_total_section[self._ascension]*cnt.max_ascension_values[self._key]["atk"] \
+      + cnt.ascension_phase_to_total_section[self._ascension]*(cnt.max_ascension_values[self._key]["atk"] if not self.is_traveler() else cnt.max_ascension_values["Traveler"]["atk"]) \
       + (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
         if self._special_stat == "atk" else 0) \
       + self._weapon.base_atk
@@ -230,7 +236,7 @@ class Character(object) :
   def defense(self) :
     char_def = \
       self._base_def*cnt.level_multipliers[self._star][self._level-1] \
-      + cnt.ascension_phase_to_total_section[self._ascension]*cnt.max_ascension_values[self._key]["def"] \
+      + cnt.ascension_phase_to_total_section[self._ascension]*(cnt.max_ascension_values[self._key]["def"] if not self.is_traveler() else cnt.max_ascension_values["Traveler"]["def"]) \
       + (cnt.ascension_phase_to_ascension_multipliers[self._ascension]*cnt.special_stat_base_values[self._star][self._special_stat]
         if self._special_stat == "def" else 0)
     weap_def = (self._weapon.substat_value if self._weapon.substat == "def" else 0)
