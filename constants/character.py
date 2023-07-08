@@ -270,6 +270,15 @@ characters = {
     "special_stat": "crit_dmg",
     "weapon_type": "sword",
   },
+  "Kirara": {
+    "base_hp": 1021.2059,
+    "base_atk": 18.6984,
+    "base_def": 45.78,
+    "star": 4,
+    "element": "dendro",
+    "special_stat": "hp",
+    "weapon_type": "sword",
+  },
   "Klee": {
     "base_hp": 800.7888,
     "base_atk": 24.206,
@@ -946,6 +955,11 @@ max_ascension_values = {
     "hp": 4188.8867,
     "atk": 103.21857,
     "def": 255.528
+  },
+  "Kirara": {
+    "hp": 3653.8564453125,
+    "atk": 66.904113769531,
+    "def": 163.8
   },
   "Klee": {
     "hp": 3288.4717,
