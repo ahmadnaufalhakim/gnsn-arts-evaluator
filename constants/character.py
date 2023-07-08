@@ -252,6 +252,15 @@ characters = {
     "special_stat": "crit_dmg",
     "weapon_type": "sword",
   },
+  "Kaveh": {
+    "base_hp": 1002.9701,
+    "base_atk": 19.5888,
+    "base_def": 62.9475,
+    "star": 4,
+    "element": "dendro",
+    "special_stat": "em",
+    "weapon_type": "claymore",
+  },
   "Keqing": {
     "base_hp": 1020.0524,
     "base_atk": 25.137,
@@ -927,6 +936,11 @@ max_ascension_values = {
     "hp": 4384.629,
     "atk": 95.57275,
     "def": 245.7
+  },
+  "Kaveh": {
+    "hp": 3588.6091,
+    "atk": 70.09002,
+    "def": 225.225
   },
   "Keqing": {
     "hp": 4188.8867,
