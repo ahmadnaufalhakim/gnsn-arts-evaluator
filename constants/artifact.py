@@ -24,6 +24,7 @@ set_key_to_set_name = {
   "MaidenBeloved": "Maiden Beloved",
   "MartialArtist": "Martial Artist",
   "NoblesseOblige": "Noblesse Oblige",
+  "NymphsDream": "Nymph's Dream",
   "OceanHuedClam": "Ocean-Hued Clam",
   "PaleFlame": "Pale Flame",
   "PrayersForDestiny": "Prayers for Destiny",
@@ -42,6 +43,7 @@ set_key_to_set_name = {
   "TravelingDoctor": "Traveling Doctor",
   "VermillionHereafter": "Vermillion Hereafter",
   "ViridescentVenerer": "Viridescent Venerer",
+  "VourukashasGlow": "Vourukasha's Glow",
   "WanderersTroupe": "Wanderer's Troupe",
 }
 
@@ -72,6 +74,7 @@ set_key_to_name = {
     "MaidenBeloved": "Maiden's Distant Love",
     "MartialArtist": "Martial Artist's Red Flower",
     "NoblesseOblige": "Royal Flora",
+    "NymphsDream": "Odyssean Flower",
     "OceanHuedClam": "Sea-Dyed Blossom",
     "PaleFlame": "Stainless Bloom",
     "ResolutionOfSojourner": "Heart of Comradeship",
@@ -86,6 +89,7 @@ set_key_to_name = {
     "TravelingDoctor": "Traveling Doctor's Silver Lotus",
     "VermillionHereafter": "Flowering Life",
     "ViridescentVenerer": "In Remembrance of Viridescent Fields",
+    "VourukashasGlow": "Stamen of Khvarena's Origin",
     "WanderersTroupe": "Troupe's Dawnlight",
   },
   "plume": {
@@ -113,6 +117,7 @@ set_key_to_name = {
     "MaidenBeloved": "Maiden's Heart-Stricken Infatuation",
     "MartialArtist": "Martial Artist's Feather Accessory",
     "NoblesseOblige": "Royal Plume",
+    "NymphsDream": "Wicked Mage's Plumule",
     "OceanHuedClam": "Deep Palace's Plume",
     "PaleFlame": "Wise Doctor's Pinion",
     "ResolutionOfSojourner": "Feather of Homecoming",
@@ -127,6 +132,7 @@ set_key_to_name = {
     "TravelingDoctor": "Traveling Doctor's Owl Feather",
     "VermillionHereafter": "Feather of Nascent Light",
     "ViridescentVenerer": "Viridescent Arrow Feather",
+    "VourukashasGlow": "Vibrant Pinion",
     "WanderersTroupe": "Bard's Arrow Feather",
   },
   "sands": {
@@ -154,6 +160,7 @@ set_key_to_name = {
     "MaidenBeloved": "Maiden's Passing Youth",
     "MartialArtist": "Martial Artist's Water Hourglass",
     "NoblesseOblige": "Royal Pocket Watch",
+    "NymphsDream": "Nymph's Constancy",
     "OceanHuedClam": "Cowry of Parting",
     "PaleFlame": "Moment of Cessation",
     "ResolutionOfSojourner": "Sundial of the Sojourner",
@@ -168,6 +175,7 @@ set_key_to_name = {
     "TravelingDoctor": "Traveling Doctor's Pocket Watch",
     "VermillionHereafter": "Solar Relic",
     "ViridescentVenerer": "Viridescent Venerer's Determination",
+    "VourukashasGlow": "Ancient Abscission",
     "WanderersTroupe": "Concert's Final Hour",
   },
   "goblet": {
@@ -195,6 +203,7 @@ set_key_to_name = {
     "MaidenBeloved": "Maiden's Fleeting Leisure",
     "MartialArtist": "Martial Artist's Wine Cup",
     "NoblesseOblige": "Royal Silver Urn",
+    "NymphsDream": "Heroes' Tea Party",
     "OceanHuedClam": "Pearl Cage",
     "PaleFlame": "Surpassing Cup",
     "ResolutionOfSojourner": "Goblet of the Sojourner",
@@ -209,6 +218,7 @@ set_key_to_name = {
     "TravelingDoctor": "Traveling Doctor's Medicine Pot",
     "VermillionHereafter": "Moment of the Pact",
     "ViridescentVenerer": "Viridescent Venerer's Vessel",
+    "VourukashasGlow": "Feast of Boundless Joy",
     "WanderersTroupe": "Wanderer's String-Kettle",
   },
   "circlet": {
@@ -236,6 +246,7 @@ set_key_to_name = {
     "MaidenBeloved": "Maiden's Fading Beauty",
     "MartialArtist": "Martial Artist's Bandana",
     "NoblesseOblige": "Royal Masque",
+    "NymphsDream": "Fell Dragon's Monocle",
     "OceanHuedClam": "Crown of Watatsumi",
     "PaleFlame": "Mocking Mask",
     "PrayersForDestiny": "Tiara of Torrents",
@@ -254,6 +265,7 @@ set_key_to_name = {
     "TravelingDoctor": "Traveling Doctor's Handkerchief",
     "VermillionHereafter": "Thundering Poise",
     "ViridescentVenerer": "Viridescent Venerer's Diadem",
+    "VourukashasGlow": "Heart of Khvarena's Brilliance",
     "WanderersTroupe": "Conductor's Top Hat",
   }
 }
@@ -546,6 +558,18 @@ set_key_to_set_bonus = {
       "description": "Using an Elemental Burst increases all party members' ATK by 20% for 12s. This effect cannot stack.",
     }
   },
+  "NymphsDream": {
+    2: {
+      "set_bonus": {
+        "hydro_dmg_bonus": .15
+      },
+      "description": "Hydro DMG Bonus +15%.",
+    },
+    4: {
+      "set_bonus": {},
+      "description": "After Normal, Charged, and Plunging Attacks, Elemental Skills, and Elemental Bursts hit opponents. 1 stack of Mirrored Nymph will triggered, lasting 8s. When under the effect of 1, 2, or 3 or more Mirrored Nymph stacks, ATK will be increased by 7%/16%/25%, and Hydro DMG will be increased by 4%/9%/15% Mirrored Nymph created by Normal, Charged, and Plunging Attacks, Elemental Skills, and Elemental Bursts exist independently.",
+    }
+  },
   "OceanHuedClam": {
     2: {
       "set_bonus": {
@@ -731,6 +755,18 @@ set_key_to_set_bonus = {
     4: {
       "set_bonus": {},
       "description": "Increases Swirl DMG by 60%. Decreases opponent's Elemental RES to the element infused in the Swirl by 40% for 10s.",
+    }
+  },
+  "VourukashasGlow": {
+    2: {
+      "set_bonus": {
+        "hp%": .2
+      },
+      "description": "HP +20%",
+    },
+    4: {
+      "set_bonus": {},
+      "description": "Elemental Skill and Elemental Burst DMG will be increased by 10%. After the equipping character takes DMG, the aforementioned DMG Bonus is increased by 80% for 5s. This effect increase can have 5 stacks. The duration of each stack is counted independently. These effects can be triggered even when the equipping character is not on the field.",
     }
   },
   "WanderersTroupe": {
