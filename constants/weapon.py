@@ -349,6 +349,12 @@ weapons = {
     "type": "t-42",
     "substat": "em",
   },
+  "JadefallsSplendor": {
+    "weapon_type": "catalyst",
+    "star": 5,
+    "type": "t-46",
+    "substat": "hp",
+  },
   "KagotsurubeIsshin": {
     "weapon_type": "sword",
     "star": 4,
@@ -2404,6 +2410,7 @@ key_to_name = {
   "IbisPiercer": "Ibis Piercer",
   "IronPoint": "Iron Point",
   "IronSting": "Iron Sting",
+  "JadefallsSplendor": "Jadefall's Splendor",
   "KagotsurubeIsshin": "Kagotsurube Isshin",
   "KagurasVerity": "Kagura's Verity",
   "KatsuragikiriNagamasa": "Katsuragikiri Nagamasa",
