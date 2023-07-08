@@ -331,6 +331,12 @@ weapons = {
     "type": "t-44b",
     "substat": "crit_rate",
   },
+  "IbisPiercer": {
+    "weapon_type": "bow",
+    "star": 4,
+    "type": "t-44",
+    "substat": "atk",
+  },
   "IronPoint": {
     "weapon_type": "polearm",
     "star": 2,
@@ -2395,6 +2401,7 @@ key_to_name = {
   "HarbingerOfDawn": "Harbinger of Dawn",
   "HuntersBow": "Hunter's Bow",
   "HuntersPath": "Hunter's Path",
+  "IbisPiercer": "Ibis Piercer",
   "IronPoint": "Iron Point",
   "IronSting": "Iron Sting",
   "KagotsurubeIsshin": "Kagotsurube Isshin",
